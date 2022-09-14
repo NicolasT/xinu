@@ -1,5 +1,5 @@
 packages:
-  xinu.cabal
+  xinu
 
 -- Note: when making changes, they likely need to be applied to the
 -- other local packages as well (for some reason, unlike as documented,

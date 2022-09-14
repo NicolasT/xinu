@@ -17,7 +17,6 @@ Stability:           alpha
 
 Extra-Source-Files:
   CHANGELOG.md
-  README.md
 
 Tested-With:         GHC ==8.10.7
                    , GHC ==9.0.2
@@ -28,6 +27,7 @@ Source-Repository head
   Type:                git
   Location:            https://github.com/NicolasT/xinu.git
   Branch:              main
+  Subdir:              xinu
 
 Common common-settings
   Default-Language:    Haskell2010
