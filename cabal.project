@@ -1,5 +1,6 @@
 packages:
   xinu
+  xinu-ffi
 
 -- Note: when making changes, they likely need to be applied to the
 -- other local packages as well (for some reason, unlike as documented,
@@ -7,6 +8,11 @@ packages:
 -- Furthermore, when making changes, the `Local-Ghc-Options` value in
 -- `cabal.haskell-ci` must be updated as well.
 Package xinu
+  Ghc-Options:
+    -Werror
+    -optc=-Werror
+
+Package xinu-ffi
   Ghc-Options:
     -Werror
     -optc=-Werror

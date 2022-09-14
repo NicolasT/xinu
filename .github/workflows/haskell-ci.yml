@@ -149,6 +149,7 @@ jobs:
         run: |
           touch cabal.project
           echo "packages: $GITHUB_WORKSPACE/source/xinu" >> cabal.project
+          echo "packages: $GITHUB_WORKSPACE/source/xinu-ffi" >> cabal.project
           cat cabal.project
       - name: sdist
         run: |
@@ -162,17 +163,25 @@ jobs:
         run: |
           PKGDIR_xinu="$(find "$GITHUB_WORKSPACE/unpacked" -maxdepth 1 -type d -regex '.*/xinu-[0-9.]*')"
           echo "PKGDIR_xinu=${PKGDIR_xinu}" >> "$GITHUB_ENV"
+          PKGDIR_xinu_ffi="$(find "$GITHUB_WORKSPACE/unpacked" -maxdepth 1 -type d -regex '.*/xinu-ffi-[0-9.]*')"
+          echo "PKGDIR_xinu_ffi=${PKGDIR_xinu_ffi}" >> "$GITHUB_ENV"
           rm -f cabal.project cabal.project.local
           touch cabal.project
           touch cabal.project.local
           echo "packages: ${PKGDIR_xinu}" >> cabal.project
+          echo "packages: ${PKGDIR_xinu_ffi}" >> cabal.project
           echo "package xinu" >> cabal.project
+          echo "    ghc-options: -Werror=missing-methods" >> cabal.project
+          echo "package xinu-ffi" >> cabal.project
           echo "    ghc-options: -Werror=missing-methods" >> cabal.project
           cat >> cabal.project <<EOF
           package xinu
             ghc-options: -Werror -optc=-Werror
+
+          package xinu-ffi
+            ghc-options: -Werror -optc=-Werror
           EOF
-          $HCPKG list --simple-output --names-only | perl -ne 'for (split /\s+/) { print "constraints: $_ installed\n" unless /^(xinu)$/; }' >> cabal.project.local
+          $HCPKG list --simple-output --names-only | perl -ne 'for (split /\s+/) { print "constraints: $_ installed\n" unless /^(xinu|xinu-ffi)$/; }' >> cabal.project.local
           cat cabal.project
           cat cabal.project.local
       - name: dump install plan
@@ -198,9 +207,12 @@ jobs:
       - name: hlint
         run: |
           if [ $((HCNUMVER >= 90200 && HCNUMVER < 90400)) -ne 0 ] ; then (cd ${PKGDIR_xinu} && hlint -XHaskell2010 src) ; fi
+          if [ $((HCNUMVER >= 90200 && HCNUMVER < 90400)) -ne 0 ] ; then (cd ${PKGDIR_xinu_ffi} && hlint -XHaskell2010 src) ; fi
       - name: cabal check
         run: |
           cd ${PKGDIR_xinu} || false
+          ${CABAL} -vnormal check
+          cd ${PKGDIR_xinu_ffi} || false
           ${CABAL} -vnormal check
       - name: haddock
         run: |
