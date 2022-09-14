@@ -1,18 +1,48 @@
 Cabal-Version:       2.2
+Build-Type:          Simple
 
 Name:                xinu
 Version:             0.1.0.0
 Synopsis:            An experimental unix package for Haskell
+Description:         This package is an experimental alternative to the unix library.
 Homepage:            https://github.com/NicolasT/xinu
+Bug-Reports:         https://github.com/NicolasT/xinu/issues
 License:             BSD-3-Clause
 License-File:        LICENSE
 Author:              Nicolas Trangez
 Maintainer:          ikke@nicolast.be
+Copyright:           (c) 2022 Nicolas Trangez
 Category:            System
-Extra-Source-Files:  CHANGELOG.md, README.md
+Stability:           alpha
+
+Extra-Source-Files:
+  CHANGELOG.md
+  README.md
+
+Source-Repository head
+  Type:                git
+  Location:            https://github.com/NicolasT/xinu.git
+  Branch:              main
+
+Common common-settings
+  Default-Language:    Haskell2010
+  Ghc-Options:
+    -Wall
+    -Wincomplete-uni-patterns
+    -Wincomplete-record-updates
+    -Wpartial-fields
+    -Wmissing-home-modules
+    -Widentities
+    -Wredundant-constraints
+    -Wcpp-undef
+    -Wmissing-export-lists
+  Cc-Options:
+    -Wall
+    -Wextra
+    -pedantic
 
 Library
+  Import:              common-settings
   Exposed-Modules:     MyLib
   Build-Depends:       base ^>=4.14.2.0
   Hs-Source-Dirs:      src
-  Default-Language:    Haskell2010
