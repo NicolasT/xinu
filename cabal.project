@@ -1,0 +1,10 @@
+packages:
+  xinu.cabal
+
+-- Note: when making changes, they likely need to be applied to the
+-- other local packages as well (for some reason, unlike as documented,
+-- having them at the top-level doesn't work as expected).
+Package xinu
+  Ghc-Options:
+    -Werror
+    -optc=-Werror
