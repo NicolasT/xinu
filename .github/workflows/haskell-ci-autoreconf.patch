@@ -1,0 +1,20 @@
+ci: run `autoreconf -i` after checking out the source tree
+
+Since we (rightfully) don't include the `configure` script in VCS,
+but it's required for the package to be buildable (or `sdist`able),
+this needs to run after checkout.
+diff --git a/.github/workflows/haskell-ci.yml b/.github/workflows/haskell-ci.yml
+index 63e82c6..433bcb5 100644
+--- a/.github/workflows/haskell-ci.yml
++++ b/.github/workflows/haskell-ci.yml
+@@ -145,6 +145,10 @@ jobs:
+         uses: actions/checkout@v2
+         with:
+           path: source
++      - name: autoreconf
++        run: |
++          cd source/xinu-ffi
++          autoreconf -i
+       - name: initial cabal.project for sdist
+         run: |
+           touch cabal.project

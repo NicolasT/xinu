@@ -1,0 +1,43 @@
+Github-Patches:
+  .github/workflows/haskell-ci-autoreconf.patch
+Copy-Fields: some
+
+-- It appears Cabal is unable to resolve the dependencies in this
+-- repository:
+--
+-- ```
+-- Run $CABAL v2-build $ARG_COMPILER --disable-tests --disable-benchmarks \
+--     --dependencies-only -j2 all
+-- ...
+-- Resolving dependencies...
+-- cabal-3.6.2.0: Cannot select only the dependencies (as requested by the
+-- '--only-dependencies' flag), the packages xinu-0.1.0.0 and
+-- xinu-ffi-0.1.0.0 are required by a dependency of one of the other
+-- targets.
+-- ```
+--
+-- So, skip this step (at least for now).
+--
+-- See: https://github.com/NicolasT/xinu/actions/runs/3060684207/jobs/4939496825#step:20:22
+Install-Dependencies: False
+
+Distribution: jammy
+
+Hlint: True
+Hlint-Job: 9.2.4
+Hlint-Version: ^>=3.4
+
+Local-Ghc-Options:
+  -Werror
+  -optc=-Werror
+
+Constraint-Set bytestring-0.10
+  Constraints: bytestring ^>=0.10
+  Ghc:         <9.2
+  Tests:       True
+  Run-Tests:   True
+
+Constraint-Set bytestring-0.11
+  Constraints: bytestring ^>=0.11
+  Tests:       True
+  Run-Tests:   True

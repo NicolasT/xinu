@@ -1,0 +1,17 @@
+signature System.Xinu.Path (
+      Path
+    , toString
+    , withPath
+    ) where
+
+import Control.Monad.Catch (MonadMask)
+import Control.Monad.IO.Class (MonadIO)
+import Foreign.C.String (CString)
+
+data Path
+
+-- Execute an action, passing the given Path as a CString.
+withPath :: (MonadIO m, MonadMask m) => Path -> (CString -> m a) -> m a
+
+-- Used for error reporting.
+toString :: Path -> String
