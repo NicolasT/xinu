@@ -1,5 +1,5 @@
-Cabal-Version:       2.2
-Build-Type:          Simple
+Cabal-Version:       3.0
+Build-Type:          Configure
 
 Name:                xinu-ffi
 Version:             0.1.0.0
@@ -17,7 +17,18 @@ Category:            System
 Stability:           alpha
 
 Extra-Source-Files:
-  CHANGELOG.md
+    CHANGELOG.md
+  , configure.ac
+  , m4/ax_check_define.m4
+  -- Generated files
+  , aclocal.m4
+  , configure
+  , xinu-ffi-config.h.in
+
+Extra-Tmp-Files:
+    config.log
+  , config.status
+  , xinu-ffi-config.h
 
 Tested-With:         GHC ==8.10.7
                    , GHC ==9.0.2
@@ -49,6 +60,14 @@ Common common-settings
 
 Library
   Import:              common-settings
-  Exposed-Modules:     MyLib
+  Exposed-Modules:     System.Xinu.IO.FFI
+  -- To keep hlint happy, we need at least one pure Haskell module
+  Other-Modules:       System.Xinu.FFI
   Build-Depends:       base ^>=4.14.2.0 || ^>=4.15 || ^>=4.16 || ^>=4.17
+  Build-Tool-Depends:  hsc2hs:hsc2hs
   Hs-Source-Dirs:      src
+  Other-Extensions:    CApiFFI
+  Include-Dirs:        .
+  Autogen-Includes:    xinu-ffi-config.h
+  Install-Includes:    xinu-ffi.h
+                     , xinu-ffi-config.h

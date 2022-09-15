@@ -1,10 +1,11 @@
-Cabal-Version:       2.2
+Cabal-Version:       3.0
 Build-Type:          Simple
 
 Name:                xinu
 Version:             0.1.0.0
 Synopsis:            An experimental unix package for Haskell
-Description:         This package is an experimental alternative to the unix library.
+Description:
+  This package is an experimental alternative to the unix library.
 Homepage:            https://github.com/NicolasT/xinu
 Bug-Reports:         https://github.com/NicolasT/xinu/issues
 License:             BSD-3-Clause
@@ -16,7 +17,8 @@ Category:            System
 Stability:           alpha
 
 Extra-Source-Files:
-  CHANGELOG.md
+    CHANGELOG.md
+  , xinu.h
 
 Tested-With:         GHC ==8.10.7
                    , GHC ==9.0.2
@@ -48,6 +50,56 @@ Common common-settings
 
 Library
   Import:              common-settings
-  Exposed-Modules:     MyLib
   Build-Depends:       base ^>=4.14.2.0 || ^>=4.15 || ^>=4.16 || ^>=4.17
+                     , exceptions ^>=0.10.4
+                     , xinu-ffi ^>=0.1
+                     , xinu-internal
+                     , xinu-internal-abstract
   Hs-Source-Dirs:      src
+  Exposed-Modules:     System.Xinu.IO
+  Reexported-Modules:  System.Xinu.IO.FilePath
+                     , System.Xinu.IO.ByteString
+  Mixins:
+      xinu-internal-abstract
+        (System.Xinu.IO.Abstract as System.Xinu.IO.FilePath)
+        requires (System.Xinu.Path as System.Xinu.Path.FilePath)
+    , xinu-internal-abstract
+        (System.Xinu.IO.Abstract as System.Xinu.IO.ByteString)
+        requires (System.Xinu.Path as System.Xinu.Path.ByteString)
+
+  Include-Dirs:        .
+  Install-Includes:    xinu.h
+
+Library xinu-internal-abstract
+  Import:              common-settings
+  Build-Depends:       base ^>=4.14.2.0 || ^>=4.15 || ^>=4.16 || ^>=4.17
+                     , exceptions ^>=0.10.4
+                     , xinu-ffi ^>=0.1
+                     , xinu-internal
+  Hs-Source-Dirs:      internal/xinu-internal-abstract
+  Exposed-Modules:     System.Xinu.IO.Abstract
+  Signatures:          System.Xinu.Path
+  Include-Dirs:        .
+
+Library xinu-internal
+  Import:              common-settings
+  Build-Depends:       base ^>=4.14.2.0 || ^>=4.15 || ^>=4.16 || ^>=4.17
+                     , bytestring ^>=0.10 || ^>=0.11.3.1
+                     , exceptions ^>=0.10.4
+  Hs-Source-Dirs:      internal/xinu-internal
+  Exposed-Modules:     System.Xinu.Error
+                     , System.Xinu.Path.FilePath
+                     , System.Xinu.Path.ByteString
+
+Test-Suite xinu-test
+  Import:              common-settings
+  Type:                exitcode-stdio-1.0
+  Hs-Source-Dirs:      test
+  Main-Is:             xinu-test.hs
+  Build-Depends:       base ^>=4.14.2.0 || ^>=4.15 || ^>=4.16 || ^>=4.17
+                     , xinu
+                     , bytestring ^>=0.10 || ^>=0.11.3.1
+                     , exceptions ^>=0.10.4
+                     , tasty ^>=1.4.1
+                     , tasty-hunit ^>=0.10.0.3
+                     , transformers ^>=0.5.6.2
